@@ -1,0 +1,218 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="keywords" content=""/>
+
+
+    <link href="/static/css/bootstrap.css" rel='stylesheet' type='text/css'/>
+
+    <link href="/static/css/style.css" rel='stylesheet' type='text/css'/>
+    <link href="https://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/css/bootstrap-select.min.css" rel="stylesheet">
+
+    <script type="text/javascript" src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/modernizr.custom.js"></script>
+
+    <link href="http://fonts.googleapis.com/css?family=PT+Sans:400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext"
+          rel="stylesheet">
+
+    <link href="/static/css/custom.css" rel="stylesheet">
+    <style>
+        #chartdiv {
+            width: 100%;
+            height: 295px;
+        }
+
+        table {
+            table-layout: fixed;
+            word-break: break-all;
+            word-wrap: break-all;
+        }
+
+        table td {
+
+        }
+
+    </style>
+
+
+</head>
+<body>
+<div class="main-content">
+
+    <!--left-fixed -navigation-->
+
+    <!-- header-starts -->
+    <div class="sticky-header header-section " style="height: 50px;">
+
+        <div class="search-box" style="width: 20%;float: left;margin-left: 2%;">
+
+
+            <select id="appNameSelect" class="selectpicker show-tick form-control" data-live-search="true">
+                <#list appNames as item>
+
+                <option value="${item}">${item}</option>
+
+            </#list>
+            </select>
+        </div>
+
+        <div class="search-box" style="width: 15%;float: right;margin-right: 2%;">
+            <select id="reTimeSelect" class="selectpicker show-tick form-control" data-live-search="false">
+                <option value="30">30分钟</option>
+                <option value="60">1小时</option>
+                <option value="120">2小时</option>
+                <option value="360">6小时</option>
+                <option value="1440">1天</option>
+                <option value="4320">3天</option>
+                <option value="7200">5天</option>
+                <option value="10080">1周</option>
+                <option value="20160">2周</option>
+                <option value="43200">1个月</option>
+            </select>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <!-- //header-ends -->
+    <!-- main content start-->
+    <div id="page-wrapper">
+
+
+        <ul class="nav nav-tabs" id="tabs1">
+            <li class="active"><a href="#tab1" data-taggle="tab" class="t1" data-path="index">JVM信息</a></li>
+            <li><a href="#tab2" data-taggle="tab" class="t2" data-path="method">方法监控</a></li>
+            <li><a href="#tab3" data-taggle="tab" class="t3" data-path="logger">日志监控</a></li>
+            <li><a href="#tab4" data-taggle="tab" class="t4" data-path="sql">SQL监控</a></li>
+            <li><a href="#tab5" data-taggle="tab" class="t5" data-path="log">日志实时监控</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab1">
+                <div class="vmInfo">
+                    <div class="widget-shadow" style="float: left;width: 49%;padding: 2em 2em 0.5em;">
+                        <h4>VM信息:</h4>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th style="width: 12%">number:</th>
+                                <th style="width: 25%">name</th>
+                                <th style="width: 63%">value</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="active">
+                                <th scope="row">1</th>
+                                <td>java-version</td>
+                                <td>${jvmInfo.javaVersion}</td>
+
+                            </tr>
+                            <tr class="active">
+                                <th scope="row">2</th>
+                                <td>jre-home</td>
+                                <td>${jvmInfo.jreHome}</td>
+
+                            </tr>
+                            <tr class="active">
+                                <th scope="row">3</th>
+                                <td>java-vm-version</td>
+                                <td>${jvmInfo.javaVmVersion}</td>
+
+                            </tr>
+                            <tr class="active">
+                                <th scope="row">4</th>
+                                <td>java-vm-name</td>
+                                <td>${jvmInfo.javaVmName}</td>
+
+                            </tr>
+                            <tr class="active">
+                                <th scope="row">5</th>
+                                <td>java-class-path</td>
+                                <td>${jvmInfo.javaClassPath}</td>
+
+                            </tr>
+                            <tr class="active">
+                                <th scope="row">6</th>
+                                <td>java-library-path</td>
+                                <td>${jvmInfo.javaLibraryPath}</td>
+
+                            </tr>
+                            <tr class="active">
+                                <th scope="row">7</th>
+                                <td>java-vm-arguments</td>
+                                <td>${jvmInfo.javaVmArguments}</td>
+
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="width: 49%;float: right;background-color: white;padding:10px;">
+                        <div id="threadChart" style="width: 100%;height: 450px;margin-top: 10px;"></div>
+                        <div id="classCountChart" style="width: 100%;height: 450px;margin-top: 10px;"></div>
+                    </div>
+
+                </div>
+                <div style="width:100%;margin-top:20px;float: left; background-color: white;">
+                    <div id="heapMemoryChart" style="width: 100%;height: 350px"></div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div style="width:100%;margin-top:20px;float: left; background-color: white;">
+                    <div id="nonHeapMemoryChart" style="width: 100%;height: 350px"></div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div style="width:100%;margin-top:20px;float: left;">
+                    <div id="edenSpaceChart"
+                         style="width: 49%;height: 350px;float: left; background-color: white;"></div>
+                    <div id="survivorSpaceChart"
+                         style="width: 49%;height: 350px;float: right; background-color: white;"></div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div style="width:100%;margin-top:20px;float: left;">
+                    <div id="oldGenChart" style="width: 49%;height: 350px;float: left; background-color: white;"></div>
+                    <div id="permGenChart"
+                         style="width: 49%;height: 350px;float: right; background-color: white;"></div>
+                    <div class="clearfix"></div>
+                </div>
+
+            </div>
+            <div class="tab-pane" id="tab2">
+
+            </div>
+
+        </div>
+
+
+        <div class="clearfix"></div>
+
+    </div>
+    <div class="footer">
+        <p>Copyright &copy; 2018.seven java server monitory agent collector. </p>
+    </div>
+</div>
+
+<script src="https://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/js/bootstrap-select.min.js"></script>
+<script src="/static/js/bootstrap.js"></script>
+<script src="/static/echarts/echarts-all.js"></script>
+<script src="/static/indexChart.js"></script>
+<!-- //Bootstrap Core JavaScript -->
+<script type="text/javascript">
+    $(function () {
+        $('#tabs1 a').click(function (e) {
+            e.preventDefault();//阻止a链接的跳转行为
+            window.location.href = "/" + $(this).attr("data-path");
+        })
+        $("#appNameSelect").change(function (e) {
+            loadJvmData()
+        });
+        $("#reTimeSelect").change(function (e) {
+            loadJvmData();
+        });
+        loadJvmData();
+    });
+</script>
+
+</body>
+</html>

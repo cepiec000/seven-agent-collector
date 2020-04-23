@@ -1,0 +1,119 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>方法监控</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="keywords" content=""/>
+    <script type="application/x-javascript"> addEventListener("load", function () {
+        setTimeout(hideURLbar, 0);
+    }, false);
+
+    function hideURLbar() {
+        window.scrollTo(0, 1);
+    } </script>
+
+    <link href="/static/css/bootstrap.css" rel='stylesheet' type='text/css'/>
+
+    <link href="/static/css/style.css" rel='stylesheet' type='text/css'/>
+    <link href="https://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/css/bootstrap-select.min.css" rel="stylesheet">
+
+    <script type="text/javascript" src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/modernizr.custom.js"></script>
+
+    <link href="http://fonts.googleapis.com/css?family=PT+Sans:400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext"
+          rel="stylesheet">
+
+    <link href="/static/css/custom.css" rel="stylesheet">
+    <style>
+        #chartdiv {
+            width: 100%;
+            height: 295px;
+        }
+
+        table {
+            table-layout: fixed;
+            word-break: break-all;
+            word-wrap: break-all;
+        }
+
+        table td {
+
+        }
+
+    </style>
+
+
+</head>
+<body>
+<div class="main-content">
+    <div class="sticky-header header-section " style="height: 50px;">
+        <div class="search-box" style="width: 20%;float: left;margin-left: 2%;">
+            <select id="appNameSelect" class="selectpicker show-tick form-control" data-live-search="true">
+                <#list appNames as item>
+                <option value="${item}">${item}</option>
+            </#list>
+            </select>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <!-- //header-ends -->
+    <div id="page-wrapper">
+        <ul class="nav nav-tabs" id="tabs1">
+            <li><a href="#tab1" data-taggle="tab" class="t1" data-path="index">JVM信息</a></li>
+            <li ><a href="#tab2" data-taggle="tab" class="t2" data-path="method">方法监控</a></li>
+            <li><a href="#tab3" data-taggle="tab" class="t3" data-path="logger">日志监控</a></li>
+            <li><a href="#tab4" data-taggle="tab" class="t4" data-path="sql">SQL监控</a></li>
+            <li class="active"><a href="#tab5" data-taggle="tab" class="t5" data-path="log">日志实时监控</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane " id="tab1">
+
+            </div>
+            <div class="tab-pane active" id="tab5">
+                <div id="log-container" style="overflow-y: scroll;background:#333;color: #aaa;padding: 10px;margin: auto;margin-top:25px; ">
+                    <div></div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+    <div class="footer">
+        <p>Copyright &copy; 2018.seven java server monitory agent collector. </p>
+    </div>
+</div>
+<!-- new added graphs chart js-->
+<script src="https://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/js/bootstrap-select.min.js"></script>
+<script src="/static/js/bootstrap.js"></script>
+<script type="text/javascript">
+    var websocket=null;
+    $(function () {
+        var height=$(window).height();
+        var width=$(window).width();
+        $("#log-container").css({"width":(width-50)+"px","height":(height-250)+"px"});
+        $('#tabs1 a').click(function (e) {
+            e.preventDefault();//阻止a链接的跳转行为
+            window.location.href = "/" + $(this).attr("data-path");
+        })
+
+        $("#appNameSelect").change(function (e) {
+            websocket.close();
+            websocket=null;
+            connectLogger();
+        });
+        connectLogger();
+    });
+    function connectLogger() {
+        var appName = $("#appNameSelect").val();
+        if (websocket==null) {
+            websocket = new WebSocket('ws://localhost:9999/webSocket/' + appName);
+            websocket.onmessage = function (ev) {
+                $("#log-container div").append(ev.data);
+                $("#log-container").scrollTop($("#log-container div").height() - $("#log-container").height());
+            }
+        }
+    }
+</script>
+</body>
+</html>
